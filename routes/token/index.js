@@ -13,9 +13,9 @@ const token = async (req, res) => {
 
     if (decodedData) userData = await getUserByUUID(decodedData.uuid);
     // send user data to the server
-    return res.json({ status: "success", data: userData });
+    return res.status(200).json({ status: "success", data: userData });
   } catch (err) {
-    return res.json({ status: "error", message: err });
+    return res.status(404).json({ status: "error", message: err });
   }
 };
 

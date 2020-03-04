@@ -111,4 +111,13 @@ const getAllServices = async () => {
   });
 };
 
-export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, getFoods, getProductByPUID, confirmAcountByUUID, getAllServices };
+const getServiceByUUID = async uuid => {
+  return new Promise((resolve, reject) => {
+    database.get("SELECT * FROM services WHERE uuid = ?", uuid, (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+};
+
+export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, getFoods, getProductByPUID, confirmAcountByUUID, getAllServices, getServiceByUUID };

@@ -8,7 +8,7 @@ const getFood = async (req, res) => {
       data: data
     });
   } catch (err) {
-    return res.status(200).json({
+    return res.status(404).json({
       status: "error",
       message: err
     });

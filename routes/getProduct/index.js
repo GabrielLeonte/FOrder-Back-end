@@ -18,7 +18,7 @@ const getProduct = async (req, res) => {
     // return product data to the client
     if (data) return res.status(200).json({ status: "success", data: data });
   } catch (err) {
-    return res.status(200).json({ status: "err", message: err });
+    return res.status(404).json({ status: "err", message: err });
   }
 };
 
