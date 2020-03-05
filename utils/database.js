@@ -7,10 +7,6 @@ database.run("CREATE TABLE IF NOT EXISTS users (uuid TEXT UNIQUE, first_name TEX
   if (err) console.log(err);
 });
 
-database.run("CREATE TABLE IF NOT EXISTS foods (name TEXT ,uuid TEXT UNIQUE, shop TEXT, type TEXT, weight INT, incredients TEXT, price INT, currency TEXT, photo TEXT)", err => {
-  if (err) console.log(err);
-});
-
 database.run("CREATE TABLE IF NOT EXISTS services (name TEXT ,uuid TEXT UNIQUE, description TEXT)", err => {
   if (err) console.log(err);
 });
@@ -75,24 +71,6 @@ const getUserByUUID = async uuid => {
   });
 };
 
-const getFoods = async () => {
-  return new Promise((resolve, reject) => {
-    database.all("SELECT *  FROM foods ", (err, data) => {
-      if (err) reject(err);
-      else resolve(data);
-    });
-  });
-};
-
-const getProductByPUID = async uuid => {
-  return new Promise((resolve, reject) => {
-    database.get("SELECT name, uuid, shop, type, weight, price FROM foods WHERE uuid = ?", uuid, (err, data) => {
-      if (err) reject(err);
-      else resolve(data);
-    });
-  });
-};
-
 const confirmAcountByUUID = async uuid => {
   return new Promise((resolve, reject) => {
     database.run("UPDATE users SET active = 1 WHERE uuid = ?", uuid, err => {
@@ -120,4 +98,4 @@ const getServiceByUUID = async uuid => {
   });
 };
 
-export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, getFoods, getProductByPUID, confirmAcountByUUID, getAllServices, getServiceByUUID };
+export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID };
