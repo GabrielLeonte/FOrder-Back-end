@@ -4,11 +4,15 @@ const Sqlite3 = require("sqlite3").verbose();
 const database = new Sqlite3.Database(process.env.DB_PATH);
 
 database.run("CREATE TABLE IF NOT EXISTS users (uuid TEXT UNIQUE, first_name TEXT, last_name TEXT, email TEXT UNIQUE, phone INT UNIQUE, password TEXT, reset_token TEXT UNIQUE, confirmation_token TEXT, active INT DEFAULT 0, created_at INT)", err => {
-  if (err) console.log(err);
+  if (err) returnconsole.log(err);
 });
 
 database.run("CREATE TABLE IF NOT EXISTS services (name TEXT ,uuid TEXT UNIQUE, description TEXT)", err => {
-  if (err) console.log(err);
+  if (err) return console.log(err);
+});
+
+database.run("CREATE TABLE IF NOT EXISTS streets (city TEXT, name TEXT)", err => {
+  if (err) return console.log(err);
 });
 
 const createUser = async user => {
@@ -98,4 +102,13 @@ const getServiceByUUID = async uuid => {
   });
 };
 
-export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID };
+const getAllStreets = async () => {
+  return new Promise((resolve, reject) => {
+    database.all("SELECT * FROM streets", (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+};
+
+export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID, getAllStreets };
