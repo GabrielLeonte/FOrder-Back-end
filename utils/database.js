@@ -4,7 +4,7 @@ const Sqlite3 = require("sqlite3").verbose();
 const database = new Sqlite3.Database(process.env.DB_PATH);
 
 database.run("CREATE TABLE IF NOT EXISTS users (uuid TEXT UNIQUE, first_name TEXT, last_name TEXT, email TEXT UNIQUE, phone INT UNIQUE, password TEXT, reset_token TEXT UNIQUE, confirmation_token TEXT, active INT DEFAULT 0, created_at INT)", err => {
-  if (err) returnconsole.log(err);
+  if (err) return console.log(err);
 });
 
 database.run("CREATE TABLE IF NOT EXISTS services (name TEXT ,uuid TEXT UNIQUE, description TEXT)", err => {
@@ -12,6 +12,10 @@ database.run("CREATE TABLE IF NOT EXISTS services (name TEXT ,uuid TEXT UNIQUE, 
 });
 
 database.run("CREATE TABLE IF NOT EXISTS streets (city TEXT, name TEXT)", err => {
+  if (err) return console.log(err);
+});
+
+database.run("CREATE TABLE IF NOT EXISTS open_services (id TEXT UNIQUE, timestamp INT, service_name TEXT, description TEXT, contact_lastname TEXT, address_house_number TEXT, address_block_number TEXT, address_apartament_number TEXT, budget INT, user_id TEXT, last_geolocation TEXT, status TEXT, taken_by TEXT )", err => {
   if (err) return console.log(err);
 });
 
@@ -111,4 +115,13 @@ const getAllStreets = async () => {
   });
 };
 
-export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID, getAllStreets };
+const createOrder = async (id, timestamp, service_name, description, contact_lastname, address_house_number, address_block, address_apartament, budget, user_id, last_geolocation, status, taken_by) => {
+  return new Promise((resolve, reject) => {
+    database.run("INSERT INTO open_services (id, timestamp, service_name, description, contact_lastname, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", [id, timestamp, service_name, description, contact_lastname, address_house_number, address_block, address_apartament, budget, user_id, last_geolocation, status, taken_by], err => {
+      if (err) reject(err);
+      else resolve(true);
+    });
+  });
+};
+
+export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID, getAllStreets, createOrder };

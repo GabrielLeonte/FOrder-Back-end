@@ -8,6 +8,7 @@ const LoadHttp = app => {
   app.post("/confirmAccount", require("../routes/confirmAccount").default);
   app.post("/getService", require("../routes/getService").default);
   app.post("/getStreets", require("../routes/getStreets").default);
+  app.post("/createOrder", require("../routes/createOrder").default);
 };
 
 export { LoadHttp };
