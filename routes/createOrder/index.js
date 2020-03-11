@@ -26,9 +26,8 @@ const createOrder_route = async (req, res) => {
     await createOrder(id, timestamp, serviceData.name, OrderData.description, OrderData.contact_phone, OrderData.contact_firstname, OrderData.contact_lastname, OrderData.house_number, OrderData.block_number, OrderData.apartment_number, Number(OrderData.offer), UserData.uuid, null, "Se așteaptă să fie preluată", null);
 
     // return a success status
-    res.status(200).json({ status: "success" });
+    res.status(200).json({ status: "success", id: id });
   } catch (err) {
-    console.log(err);
     return res.status(404).json({ status: "err", message: err });
   }
 };

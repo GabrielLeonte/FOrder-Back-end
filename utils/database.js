@@ -118,11 +118,19 @@ const getAllStreets = async () => {
 const createOrder = async (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) => {
   return new Promise((resolve, reject) => {
     database.run("INSERT INTO open_services (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by], err => {
-      if (err) {
-        console.log("err");
-      } else resolve(true);
+      if (err) reject(err);
+      else resolve(true);
     });
   });
 };
 
-export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID, getAllStreets, createOrder };
+const getOrdersByUUID = async uuid => {
+  return new Promise((resolve, reject) => {
+    database.all("SELECT * FROM open_services WHERE user_id = ?", uuid, (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+};
+
+export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID, getAllStreets, createOrder, getOrdersByUUID };
