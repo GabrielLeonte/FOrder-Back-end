@@ -15,7 +15,7 @@ database.run("CREATE TABLE IF NOT EXISTS streets (city TEXT, name TEXT)", err =>
   if (err) return console.log(err);
 });
 
-database.run("CREATE TABLE IF NOT EXISTS open_services (id TEXT UNIQUE, timestamp INT, service_name TEXT, description TEXT, contact_phone INT, contact_firstname TEXT, contact_lastname TEXT, address_house_number INT, address_block_number TEXT, address_apartament_number INT, budget INT, user_id TEXT, last_geolocation TEXT, status TEXT, taken_by TEXT)", err => {
+database.run("CREATE TABLE IF NOT EXISTS open_services (id TEXT UNIQUE, timestamp INT, service_name TEXT, description TEXT, contact_phone INT, contact_firstname TEXT, contact_lastname TEXT, street TEXT, address_house_number INT, address_block_number TEXT, address_apartament_number INT, budget INT, user_id TEXT, last_geolocation TEXT, status TEXT, taken_by TEXT)", err => {
   if (err) return console.log(err);
 });
 
@@ -72,7 +72,7 @@ const verifyUser = async (email, password) => {
 
 const getUserByUUID = async uuid => {
   return new Promise((resolve, reject) => {
-    database.get("SELECT first_name, last_name, email, phone, active FROM users WHERE uuid = ? ", uuid, (err, data) => {
+    database.get("SELECT uuid, first_name, last_name, email, phone, active FROM users WHERE uuid = ? ", uuid, (err, data) => {
       if (err) reject(err);
       if (data) resolve(data);
     });
@@ -115,9 +115,9 @@ const getAllStreets = async () => {
   });
 };
 
-const createOrder = async (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) => {
+const createOrder = async (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, street, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) => {
   return new Promise((resolve, reject) => {
-    database.run("INSERT INTO open_services (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by], err => {
+    database.run("INSERT INTO open_services (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname,street,  address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, street, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by], err => {
       if (err) reject(err);
       else resolve(true);
     });
@@ -133,4 +133,13 @@ const getOrdersByUUID = async uuid => {
   });
 };
 
-export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID, getAllStreets, createOrder, getOrdersByUUID };
+const getAllOpenOrders = async uuid => {
+  return new Promise((resolve, reject) => {
+    database.all("SELECT * FROM open_services WHERE status = ? AND user_id != ?", "Se așteaptă să fie preluată", uuid, (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+};
+
+export { createUser, checkEmail, checkPhone, verifyUser, getUserByUUID, confirmAcountByUUID, getAllServices, getServiceByUUID, getAllStreets, createOrder, getOrdersByUUID, getAllOpenOrders };
