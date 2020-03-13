@@ -3,7 +3,7 @@ const createOrderSchema = {
   properties: {
     serviceID: { type: "integer" },
     street: { type: "string" },
-    description: { type: "string" },
+    description: { type: "string", maxLength: 200 },
     contact_phone: { type: "integer" },
     contact_firstname: { type: "string" },
     contact_lastname: { type: "string" },
