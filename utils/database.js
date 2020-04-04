@@ -19,7 +19,7 @@ database.run("CREATE TABLE IF NOT EXISTS open_services (id TEXT UNIQUE, timestam
   if (err) return console.log(err);
 });
 
-const createUser = async user => {
+const createUser = user => {
   return new Promise((resolve, reject) => {
     database.run("INSERT INTO users (uuid, email, phone, password, confirmation_token, created_at) VALUES (?, ?, ?, ?, ?, ?)", [user.user_unique_id, user.email, user.phone, user.password, user.confirmation_token, user.created_at], err => {
       if (err) reject(err);
@@ -28,7 +28,7 @@ const createUser = async user => {
   });
 };
 
-const checkEmail = async email => {
+const checkEmail = email => {
   return new Promise((resolve, reject) => {
     database.get("SELECT * FROM users WHERE email = ?", email, (err, data) => {
       // reject if any error
@@ -41,7 +41,7 @@ const checkEmail = async email => {
   });
 };
 
-const checkPhone = async phone => {
+const checkPhone = phone => {
   return new Promise((resolve, reject) => {
     database.get("SELECT * FROM users WHERE phone = ?", phone, (err, data) => {
       // reject if any error
@@ -54,7 +54,7 @@ const checkPhone = async phone => {
   });
 };
 
-const verifyUser = async (email, password) => {
+const verifyUser = (email, password) => {
   return new Promise((resolve, reject) => {
     database.get("SELECT * FROM users WHERE email = ?", email, (err, data) => {
       // reject if any error
@@ -70,7 +70,7 @@ const verifyUser = async (email, password) => {
   });
 };
 
-const getUserByUUID = async uuid => {
+const getUserByUUID = uuid => {
   return new Promise((resolve, reject) => {
     database.get("SELECT uuid, first_name, last_name, email, phone, active FROM users WHERE uuid = ? ", uuid, (err, data) => {
       if (err) reject(err);
@@ -79,7 +79,7 @@ const getUserByUUID = async uuid => {
   });
 };
 
-const confirmAcountByUUID = async uuid => {
+const confirmAcountByUUID = uuid => {
   return new Promise((resolve, reject) => {
     database.run("UPDATE users SET active = 1 WHERE uuid = ?", uuid, err => {
       if (err) reject(err);
@@ -88,16 +88,15 @@ const confirmAcountByUUID = async uuid => {
   });
 };
 
-const getAllServices = async () => {
-  return new Promise((resolve, reject) => {
+const getAllServices = () =>
+  new Promise((resolve, reject) => {
     database.all("SELECT * FROM services", (err, data) => {
       if (err) reject(err);
       else resolve(data);
     });
   });
-};
 
-const getServiceByUUID = async uuid => {
+const getServiceByUUID = uuid => {
   return new Promise((resolve, reject) => {
     database.get("SELECT * FROM services WHERE uuid = ?", uuid, (err, data) => {
       if (err) reject(err);
@@ -106,7 +105,7 @@ const getServiceByUUID = async uuid => {
   });
 };
 
-const getAllStreets = async () => {
+const getAllStreets = () => {
   return new Promise((resolve, reject) => {
     database.all("SELECT * FROM streets", (err, data) => {
       if (err) reject(err);
@@ -115,7 +114,7 @@ const getAllStreets = async () => {
   });
 };
 
-const createOrder = async (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, street, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) => {
+const createOrder = (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, street, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) => {
   return new Promise((resolve, reject) => {
     database.run("INSERT INTO open_services (id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname,street,  address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [id, timestamp, service_name, description, contact_phone, contact_firstname, contact_lastname, street, address_house_number, address_block_number, address_apartament_number, budget, user_id, last_geolocation, status, taken_by], err => {
       if (err) reject(err);
@@ -124,7 +123,7 @@ const createOrder = async (id, timestamp, service_name, description, contact_pho
   });
 };
 
-const getOrdersByUUID = async uuid => {
+const getOrdersByUUID = uuid => {
   return new Promise((resolve, reject) => {
     database.all("SELECT * FROM open_services WHERE user_id = ?", uuid, (err, data) => {
       if (err) reject(err);
@@ -133,7 +132,7 @@ const getOrdersByUUID = async uuid => {
   });
 };
 
-const getAllOpenOrders = async uuid => {
+const getAllOpenOrders = uuid => {
   return new Promise((resolve, reject) => {
     database.all("SELECT * FROM open_services WHERE status = ? AND user_id != ?", "Se așteaptă să fie preluată", uuid, (err, data) => {
       if (err) reject(err);
