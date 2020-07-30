@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r esm index.js",
-    "nodemon": "nodemon --exec node -r esm index.js"
+    "nodemon": "nodemon --exec node -r esm index.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "Gabi",
   "license": "MIT",
@@ -27,6 +29,8 @@
     "node-pre-gyp": "^0.14.0",
     "socket.io": "^2.3.0",
     "sqlite3": "^4.1.1",
-    "uuid": "^3.4.0"
-  }
+    "uuid": "^3.4.0",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
